@@ -310,61 +310,6 @@ void exchangeSignals(const char *dirname) {
 
 
     if (getpid() == pid1) {
-//        printf("TUT");
-////        pid2 = getPidFromFile('2');
-//        pid3 = getPidFromFile('3');
-//        pid4 = getPidFromFile('4');
-//        pid5 = getPidFromFile('5');
-//        pid6 = getPidFromFile('6');
-//        pid7 = getPidFromFile('7');
-//        pid8 = getPidFromFile('8');
-
-
-        group_pid = pid2;
-        if (setpgid(pid2, group_pid) == -1) {
-            printErr(module, strerror(errno), NULL);
-            exit(1);
-        }
-
-        if (setpgid(pid3, group_pid) == -1) {
-            printErr(module, strerror(errno), NULL);
-            exit(1);
-        }
-
-        if (setpgid(pid4, group_pid) == -1) {
-            printErr(module, strerror(errno), NULL);
-            exit(1);
-        }
-
-        group_pid = pid5;
-        if (setpgid(pid5, group_pid) == -1) {
-            printErr(module, strerror(errno), NULL);
-            exit(1);
-        }
-
-        if (setpgid(pid6, group_pid) == -1) {
-            printErr(module, strerror(errno), NULL);
-            exit(1);
-        }
-
-        group_pid = pid7;
-        if (setpgid(pid7, group_pid) == -1) {
-            printErr(module, strerror(errno), NULL);
-            exit(1);
-        }
-
-        if (setpgid(pid8, group_pid) == -1) {
-            printErr(module, strerror(errno), NULL);
-            exit(1);
-        }
-
-
-        sg.sa_sigaction = handler1;
-        if (sigaction(SIGUSR1, &sg, NULL) == -1) {
-            printErr(module, strerror(errno), NULL);
-            exit(1);
-        }
-
         createFile('1');
 
         const int required = 8;
@@ -392,6 +337,9 @@ void exchangeSignals(const char *dirname) {
             if (closedir(currdir) == -1)
                 printErr(module, strerror(errno), dirname);
         }
+        pid7 = getPidFromFile('7');
+        pid8 = getPidFromFile('8');
+
         if (kill(-pid7, SIGUSR1) == -1)
             printErr(module, strerror(errno), NULL);
         else
@@ -413,11 +361,11 @@ void exchangeSignals(const char *dirname) {
             printErr(module, strerror(errno), NULL);
             exit(1);
         }
-        pid1 = getPidFromFile('1');
-//        pid3 = getPidFromFile('3');
-//        pid4 = getPidFromFile('4');
+        if (setpgid(pid2, pid2) == -1) {
+            printErr(module, strerror(errno), NULL);
+            exit(1);
+        }
         createFile('2');
-
     }
 
     if (getpid() == pid3) {
@@ -431,7 +379,10 @@ void exchangeSignals(const char *dirname) {
             printErr(module, strerror(errno), NULL);
             exit(1);
         }
-//        pid6 = getPidFromFile('6');
+        if (setpgid(pid3, pid2) == -1) {
+            printErr(module, strerror(errno), NULL);
+            exit(1);
+        }
         createFile('3');
     }
 
@@ -447,6 +398,10 @@ void exchangeSignals(const char *dirname) {
             exit(1);
         }
 
+        if (setpgid(pid4, pid2) == -1) {
+            printErr(module, strerror(errno), NULL);
+            exit(1);
+        }
 //        pid5 = getPidFromFile('5');
         createFile('4');
     }
@@ -463,8 +418,11 @@ void exchangeSignals(const char *dirname) {
             exit(1);
         }
         pid4 = getPidFromFile('4');
-        pid3 = getPidFromFile('3');
-        pid2 = getPidFromFile('2');
+
+        if (setpgid(pid5, pid5) == -1) {
+            printErr(module, strerror(errno), NULL);
+            exit(1);
+        }
         createFile('5');
     }
 
@@ -475,16 +433,16 @@ void exchangeSignals(const char *dirname) {
             printErr(module, strerror(errno), NULL);
             exit(1);
         }
-//        if (setpgid(pid8, pid8) == -1){
-//            printErr(module, strerror(errno), NULL);
-//            exit(1);
-//        }
         sgTerm.sa_sigaction = handlerTerm6;
         if (sigaction(SIGTERM, &sgTerm, NULL) == -1) {
             printErr(module, strerror(errno), NULL);
             exit(1);
         }
-//        pid7 = getPidFromFile('7');
+        pid6 = getPidFromFile('6');
+        if (setpgid(pid6, pid5) == -1) {
+            printErr(module, strerror(errno), NULL);
+            exit(1);
+        }
         createFile('6');
     }
 
@@ -499,7 +457,10 @@ void exchangeSignals(const char *dirname) {
             printErr(module, strerror(errno), NULL);
             exit(1);
         }
-//        pid8 = getPidFromFile('8');
+        if (setpgid(pid7, pid7) == -1) {
+            printErr(module, strerror(errno), NULL);
+            exit(1);
+        }
         createFile('7');
     }
 
@@ -514,7 +475,11 @@ void exchangeSignals(const char *dirname) {
             printErr(module, strerror(errno), NULL);
             exit(1);
         }
-        pid6 = getPidFromFile('6');
+        pid7 = getPidFromFile('7');
+        if (setpgid(pid8, pid7) == -1) {
+            printErr(module, strerror(errno), NULL);
+            exit(1);
+        }
         pid5 = getPidFromFile('5');
         createFile('8');
     }
@@ -567,14 +532,15 @@ void exchangeSignals(const char *dirname) {
 
 
 int main(int argc, char *argv[]) {
+    printf("TUT");
     module = basename(argv[0]);
     char *dirname = "/tmp/lab4";
-
+    printf("TUT");
     if (mkdir(dirname, 0777) == -1) {
         printErr(module, strerror(errno), dirname);
         exit(1);
     }
-
+    printf("TUT");
     makeTree();
     exchangeSignals(dirname);
     exit(0);
